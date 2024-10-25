@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Orçamentos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lista de Orçamentos</h1>
+    <table id="orcamentosTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Valor</th>
+                <th>Data de Entrega</th>
+                <th>Forma de Pagamento</th>
+                <th>Status</th>
+                <th>Usuário</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os dados dos orçamentos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchOrcamentos() {
+            try {
+                const response = await fetch('http://localhost:8080/orcamentos/listar'); // Altere a URL se necessário
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                const orcamentos = await response.json();
+                const tableBody = document.getElementById('orcamentosTable').getElementsByTagName('tbody')[0];
+                
+                // Limpa o conteúdo existente
+                tableBody.innerHTML = '';
+
+                // Preenche a tabela com os dados dos orçamentos
+                orcamentos.forEach(orcamento => {
+                    const row = tableBody.insertRow();
+                    row.insertCell(0).innerText = orcamento.id;
+                    row.insertCell(1).innerText = orcamento.valor;
+                    row.insertCell(2).innerText = orcamento.dataEntrega;
+                    row.insertCell(3).innerText = orcamento.formaPagamento;
+                    row.insertCell(4).innerText = orcamento.status;
+                    row.insertCell(5).innerText = orcamento.usuario;
+                });
+            } catch (error) {
+                console.error('Erro ao buscar orçamentos:', error);
+            }
+        }
+
+        // Chama a função para buscar os orçamentos ao carregar a página
+        window.onload = fetchOrcamentos;
+    </script>
+</body>
+</html>
+

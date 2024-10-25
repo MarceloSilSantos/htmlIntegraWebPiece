@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Projeto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .message {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cadastro de Projeto</h1>
+    <form id="projetoForm">
+        <label for="largura">Largura:</label>
+        <input type="number" id="largura" required>
+
+        <label for="comprimento">Comprimento:</label>
+        <input type="number" id="comprimento" required>
+
+        <label for="altura">Altura:</label>
+        <input type="number" id="altura" required>
+
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" required>
+
+        <label for="caminhoArquivo">Caminho do Arquivo:</label>
+        <input type="text" id="caminhoArquivo" required>
+
+        <label for="dataFinalizacao">Data de Finalização:</label>
+        <input type="date" id="dataFinalizacao" required>
+
+        <label for="imagem">Imagem:</label>
+        <input type="text" id="imagem" required>
+
+        <label for="material">Material:</label>
+        <select id="material" required>
+            <option value="MATERIAL_1">Material 1</option>
+            <option value="MATERIAL_2">Material 2</option>
+            <option value="MATERIAL_3">Material 3</option>
+        </select>
+
+        <label for="followup">Follow Up:</label>
+        <select id="followup" required>
+            <option value="FOLLOWUP_1">Follow Up 1</option>
+            <option value="FOLLOWUP_2">Follow Up 2</option>
+            <option value="FOLLOWUP_3">Follow Up 3</option>
+        </select>
+
+        <label for="statusprojeto">Status do Projeto:</label>
+        <select id="statusprojeto" required>
+            <option value="NAO_INICIADO">Não Iniciado</option>
+            <option value="EM_ANDAMENTO">Em Andamento</option>
+            <option value="CONCLUIDO">Concluído</option>
+        </select>
+
+        <button type="submit">Cadastrar Projeto</button>
+    </form>
+
+    <div class="message" id="message"></div>
+
+    <script>
+        document.getElementById('projetoForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const projeto = {
+                largura: parseFloat(document.getElementById('largura').value),
+                comprimento: parseFloat(document.getElementById('comprimento').value),
+                altura: parseFloat(document.getElementById('altura').value),
+                descricao: document.getElementById('descricao').value,
+                caminhoArquivo: document.getElementById('caminhoArquivo').value,
+                dataFinalizacao: document.getElementById('dataFinalizacao').value,
+                imagem: document.getElementById('imagem').value,
+                material: document.getElementById('material').value,
+                followup: document.getElementById('followup').value,
+                statusprojeto: document.getElementById('statusprojeto').value
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/projetos/criar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(projeto)
+                });
+
+                if (response.ok) {
+                    document.getElementById('message').innerText = 'Projeto cadastrado com sucesso!';
+                    document.getElementById('projetoForm').reset();
+                } else {
+                    throw new Error('Erro ao cadastrar o projeto.');
+                }
+            } catch (error) {
+                document.getElementById('message').innerText = error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>

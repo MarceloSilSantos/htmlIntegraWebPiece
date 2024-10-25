@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Projeto</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        .project-details {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin: auto;
+            max-width: 600px;
+        }
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 25px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            height: 20px;
+            background: #4caf50;
+            width: 0; /* Inicialmente 0% */
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+        .details {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="project-details">
+        <h1>Detalhes do Projeto</h1>
+        <div class="details"><strong>ID:</strong> <span id="projectId"></span></div>
+        <div class="details"><strong>Nome:</strong> <span id="projectName"></span></div>
+        <div class="details"><strong>Descrição:</strong> <span id="projectDescription"></span></div>
+        <div class="details"><strong>Status:</strong> <span id="projectStatus"></span></div>
+        <div class="details"><strong>Data de Criação:</strong> <span id="projectCreationDate"></span></div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar">50%</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchProjectDetails() {
+            const projectId = 3; // Substitua pelo ID do projeto desejado
+
+            try {
+                const response = await fetch(`http://localhost:8080/projetos/buscar/${projectId}`);
+
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar detalhes do projeto.');
+                }
+
+                const project = await response.json();
+                
+                // Atualiza os detalhes do projeto na página
+                document.getElementById('projectId').innerText = project.id;
+                document.getElementById('projectName').innerText = project.nome;
+                document.getElementById('projectDescription').innerText = project.descricao;
+                document.getElementById('projectStatus').innerText = project.status;
+                document.getElementById('projectCreationDate').innerText = new Date(project.dataCriacao).toLocaleDateString('pt-BR');
+
+                // Atualiza a barra de progresso
+                const progressPercent = project.andamento; // Suponha que 'andamento' seja um percentual de 0 a 100
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = `${progressPercent}%`;
+                progressBar.innerText = `${progressPercent}%`;
+            } catch (error) {
+                console.error(error);
+                alert(error.message);
+            }
+        }
+
+        fetchProjectDetails();
+    </script>
+
+</body>
+</html>
+

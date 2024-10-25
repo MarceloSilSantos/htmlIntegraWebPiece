@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projetos Não Iniciados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Projetos Não Iniciados</h1>
+    <table id="projetosTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome do Projeto</th>
+                <th>Descrição</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Os dados dos projetos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchProjetosNaoIniciados() {
+            try {
+                const response = await fetch('http://localhost:8080/projetos/listar'); // Altere a URL se necessário
+                if (!response.ok) {
+                    throw new Error('Erro na requisição: ' + response.statusText);
+                }
+                const projetos = await response.json();
+                const tableBody = document.getElementById('projetosTable').getElementsByTagName('tbody')[0];
+                
+                // Limpa o conteúdo existente
+                tableBody.innerHTML = '';
+
+                // Filtra os projetos com status "NÃO_INICIADO" e preenche a tabela
+                projetos.forEach(projeto => {
+                    if (projeto.statusprojeto === 'NÃO_INICIADO') {
+                        const row = tableBody.insertRow();
+                        row.insertCell(0).innerText = projeto.id;
+                        row.insertCell(1).innerText = projeto.nome; // Supondo que o projeto tenha um atributo "nome"
+                        row.insertCell(2).innerText = projeto.descricao; // Supondo que o projeto tenha um atributo "descricao"
+                        row.insertCell(3).innerText = projeto.statusprojeto;
+                    }
+                });
+            } catch (error) {
+                console.error('Erro ao buscar projetos:', error);
+            }
+        }
+
+        // Chama a função para buscar os projetos ao carregar a página
+        window.onload = fetchProjetosNaoIniciados;
+    </script>
+</body>
+</html>

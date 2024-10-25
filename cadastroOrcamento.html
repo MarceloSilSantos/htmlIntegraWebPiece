@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Orçamento</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Cadastro de Orçamento</h1>
+    <form id="orcamentoForm">
+        <label for="valor">Valor:</label>
+        <input type="number" id="valor" step="0.01" required>
+
+        <label for="dataEntrega">Data de Entrega:</label>
+        <input type="date" id="dataEntrega" required>
+
+        <label for="formaPagamento">Forma de Pagamento:</label>
+        <input type="text" id="formaPagamento" required>
+
+        <label for="status">Status:</label>
+        <select id="status" required>
+            <option value="PENDENTE">Pendente</option>
+            <option value="APROVADO">Aprovado</option>
+            <option value="REJEITADO">Rejeitado</option>
+        </select>
+
+        <label for="idProjeto">ID do Projeto:</label>
+        <input type="number" id="idProjeto" required>
+
+        <label for="idUsuario">ID do Usuário:</label>
+        <input type="number" id="idUsuario" required>
+
+        <button type="submit">Cadastrar Orçamento</button>
+    </form>
+
+    <div class="message" id="message"></div>
+
+    <script>
+        document.getElementById('orcamentoForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const orcamento = {
+                valor: parseFloat(document.getElementById('valor').value),
+                dataEntrega: document.getElementById('dataEntrega').value,
+                formaPagamento: document.getElementById('formaPagamento').value,
+                status: document.getElementById('status').value,
+                idProjeto: parseInt(document.getElementById('idProjeto').value),
+                idUsuario: parseInt(document.getElementById('idUsuario').value)
+            };
+
+            try {
+                const response = await fetch('http://localhost:8080/orcamentos/criar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orcamento)
+                });
+
+                if (response.ok) {
+                    document.getElementById('message').innerText = 'Orçamento cadastrado com sucesso!';
+                    document.getElementById('orcamentoForm').reset();
+                } else {
+                    throw new Error('Erro ao cadastrar o orçamento.');
+                }
+            } catch (error) {
+                document.getElementById('message').innerText = error.message;
+            }
+        });
+    </script>
+
+</body>
+</html>
